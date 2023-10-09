@@ -12,7 +12,6 @@ func main() {
 	if len(os.Args) != 2 {
 		log.Fatalf("Syntax error: Must specify CSV file\n Example: meshcalc input.csv\n")
 	}
-
 	f, err := os.Open(os.Args[1])
 	if err != nil {
 		log.Fatalf("%v\n", err)
@@ -25,7 +24,6 @@ func main() {
 	if len(points) < 2 {
 		log.Fatalf("Invalid number of measurements: must be 2 or greater (got %d)\n", len(points))
 	}
-
 	if len(points[0]) != 2 {
 		log.Fatalf("Invalid measurement record: must be 2 numbers representing plan-view distance from previous point in metres, and measured height in metres. (got %d numbers)\n", len(points[1]))
 	}
