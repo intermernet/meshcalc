@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 )
@@ -28,6 +29,8 @@ func main() {
 		log.Fatalf("Invalid measurement record: must be 2 numbers representing plan-view distance from previous point in metres, and measured height in metres. (got %d numbers)\n", len(points[1]))
 	}
 	area := 0.0
+	totalWidth := 0.0
+	ropeLen := 0.0
 	spans := len(points) - 1
 	for s := 0; s < spans; s++ {
 		thisHeight, err := strconv.ParseFloat(points[s][1], 64)
@@ -43,7 +46,18 @@ func main() {
 			log.Fatalf("%v\n", err)
 		}
 		area += ((thisHeight + nextHeight) / 2.0) * width
+		totalWidth += width
+		min, max := minMax(thisHeight, nextHeight)
+		diff := max - min
+		ropeLen += math.Sqrt((width * width) + (diff * diff))
 	}
-	fmt.Printf("Area: %.2fm²\n", area)
+	fmt.Printf("Area: %.2fm²\nTotal mesh width: %.2fm\nTotal wire rope length: %.2fm\n", area, totalWidth, ropeLen)
 	os.Exit(0)
+}
+
+func minMax(a, b float64) (float64, float64) {
+	if a <= b {
+		return a, b
+	}
+	return b, a
 }
